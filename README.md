@@ -1,6 +1,6 @@
 fxhash + Canvas API + Math
 ================
-The boilerplate I use to start coding my generative art project. Includes vector math and other thins I might find usefull.
+The boilerplate I use to start coding my generative art project. Includes vector math and other thins I might find useful.
 ```sh
 $ yarn
 $ yarn start
