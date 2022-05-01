@@ -3,24 +3,27 @@ import Canvas from "./Canvas";
 import Vector from "./Math/Vector";
 
 const { cv, ctx } = Canvas.create(window.innerWidth, window.innerHeight);
-ctx.fillStyle = `hsl(${Num.rand(0, 360)}, 50%, 50%)`;
+ctx.fillStyle = `hsl(0, 0%, 100%)`;
 ctx.fillRect(0, 0, cv.width, cv.height);
 
-const v1 = new Vector(0, 0);
-const v2 = new Vector(cv.width / 2, cv.height / 2);
-const v3 = v1.copy().add(v2);
-const v4 = v3.copy().mult(2);
+noise.seed(Num.rand(0, 60000));
 
-ctx.lineWidth = 5;
-ctx.strokeStyle = `hsl(${Num.rand(0, 360)}, 50%, 50%)`;
-ctx.beginPath();
-ctx.moveTo(v1.x, v1.y);
-ctx.lineTo(v2.x, v2.y);
-ctx.stroke();
+const iterator = cv.width * 0.002;
 
-ctx.lineWidth = 10;
-ctx.strokeStyle = `hsl(${Num.rand(0, 360)}, 50%, 50%)`;
-ctx.beginPath();
-ctx.moveTo(v4.x, v4.y);
-ctx.lineTo(v3.x, v3.y);
-ctx.stroke();
+const border = cv.width * 0.1;
+const v1 = new Vector(border, border);
+const v2 = new Vector(cv.width - border, cv.height - border);
+
+for (let x = v1.x; x < v2.x; x += iterator) {
+  for (let y = v1.y; y < v2.y; y += iterator) {
+    ctx.beginPath();
+    ctx.arc(x, y, iterator, 0, 2 * Math.PI);
+    const ns = noise.simplex2(
+      Num.normalize(x, cv.width),
+      Num.normalize(y, cv.height)
+    );
+    const hue = Num.map(ns, -1, 1, 0, 360);
+    ctx.fillStyle = `hsl(${hue}, 50%, 50%)`;
+    ctx.fill();
+  }
+}
