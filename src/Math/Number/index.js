@@ -7,7 +7,7 @@ class Num {
   }
 
   static randMapped(min, max) {
-    return mapRange(fxrand(), 0, 1, min, max);
+    return this.map(fxrand(), 0, 1, min, max);
   }
 
   static normalize(axis, limit) {
