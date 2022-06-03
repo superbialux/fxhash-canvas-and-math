@@ -20,7 +20,7 @@ class Canvas {
     xhr.onload = function () {
       let a = document.createElement("a");
       a.href = window.URL.createObjectURL(xhr.response);
-      a.download = "secunda.png";
+      a.download = "canvas.png";
       a.style.display = "none";
       document.body.appendChild(a);
       a.click();
