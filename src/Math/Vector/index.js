@@ -19,11 +19,25 @@ class Vector {
     return this;
   }
 
+  dot(x, y, z) {
+    if (x instanceof Vector) {
+      return this.dot(x.x, x.y, x.z);
+    }
+    return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
+  }
+
   add(v) {
     this.x += v.x || 0;
     this.y += v.y || 0;
     this.z += v.z || 0;
     return this;
+  }
+
+  cross(v) {
+    const x = this.y * v.z - this.z * v.y;
+    const y = this.z * v.x - this.x * v.z;
+    const z = this.x * v.y - this.y * v.x;
+    return new Vector(x, y, z);
   }
 
   static add(v1, v2) {
@@ -38,11 +52,13 @@ class Vector {
     this.x -= v.x || 0;
     this.y -= v.y || 0;
     this.z -= v.z || 0;
+
     return this;
   }
 
   static sub(v1, v2) {
     const newV = v1.copy();
+
     newV.x -= v2.x;
     newV.y -= v2.y;
     newV.z -= v2.z;
@@ -51,9 +67,9 @@ class Vector {
 
   mult(x) {
     if (x instanceof Vector) {
-      this.x *= v.x;
-      this.y *= v.y;
-      this.z *= v.z;
+      this.x *= x.x;
+      this.y *= x.y;
+      this.z *= x.z;
       return this;
     }
 
@@ -84,9 +100,9 @@ class Vector {
         console.warn("Math/Vectors", "Cannot divide by 0");
         return this;
       }
-      this.x /= v.x;
-      this.y /= v.y;
-      this.z /= v.z;
+      this.x /= x.x;
+      this.y /= x.y;
+      this.z /= x.z;
       return this;
     }
     if (x === 0) {
@@ -96,6 +112,42 @@ class Vector {
     this.x /= x;
     this.y /= x;
     this.z /= x;
+    return this;
+  }
+
+  static div(v1, v2) {
+    const newV = v1.copy();
+    if (v2 instanceof Vector) {
+      if (v2.x === 0 || v2.y === 0 || v2.z === 0) {
+        console.warn("Math/Vectors", "Cannot divide by 0");
+        return this;
+      }
+      newV.x /= v2.x;
+      newV.y /= v2.y;
+      newV.z /= v2.z;
+      return newV;
+    }
+    if (v2 === 0) {
+      console.warn("Math/Vectors", "Cannot divide by 0");
+      return this;
+    }
+    newV.x /= v2;
+    newV.y /= v2;
+    newV.z /= v2;
+    return newV;
+  }
+
+  pow(x) {
+    if (x instanceof Vector) {
+      this.x **= x.x;
+      this.y **= x.y;
+      this.z **= x.z;
+      return this;
+    }
+
+    this.x **= x;
+    this.y **= x;
+    this.z **= x;
     return this;
   }
 

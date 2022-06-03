@@ -1,42 +1,93 @@
-// these are the variables you can use as inputs to your algorithms
-// console.log(fxhash); // the 64 chars hex number fed to your algorithm
-// console.log(fxrand()); // deterministic PRNG function, use it instead of Math.random()
-
-// note about the fxrand() function
-// when the "fxhash" is always the same, it will generate the same sequence of
-// pseudo random numbers, always
-
-//----------------------
-// defining features
-//----------------------
-// You can define some token features by populating the $fxhashFeatures property
-// of the window object.
-// More about it in the guide, section features:
-// [https://fxhash.xyz/articles/guide-mint-generative-token#features]
-//
-// window.$fxhashFeatures = {
-//   "Background": "Black",
-//   "Number of lines": 10,
-//   "Inverted": true
-// }
-
-// this code writes the values to the DOM as an example
+import Noise from "../Math/Noise";
+import Num from "../Math/Number";
+import { colors } from "./constants";
 
 class Canvas {
-  static create(width, height) {
+  static addLoader() {
+    const loading = document.getElementById("loading");
+    loading.style = "display: block";
+  }
+
+  static removeLoader() {
+    const loading = document.getElementById("loading");
+    loading.style = "display: none";
+  }
+
+  static save() {
+    const canvasImage = document.getElementById("lux").toDataURL("image/png");
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "blob";
+    xhr.onload = function () {
+      let a = document.createElement("a");
+      a.href = window.URL.createObjectURL(xhr.response);
+      a.download = "secunda.png";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    };
+    xhr.open("GET", canvasImage);
+    xhr.send();
+  }
+
+  static remove() {
+    const prevCanvas = document.getElementById("superbia");
+    if (prevCanvas) {
+      prevCanvas.remove();
+    }
+  }
+
+  static create(width, height, seed) {
+    //Features
+    let hue, sat, ln;
+    if (window.$fxhashFeatures["Hue"] === "Black & White") {
+      hue = 0;
+      sat = 0;
+      ln = Num.rand(50, 80);
+    } else {
+      const hueFeat = colors.find(
+        (hue) => hue.name === window.$fxhashFeatures["Hue"]
+      );
+      hue = Num.rand(hueFeat.start, hueFeat.end);
+      sat = 20;
+      ln = Num.rand(50, 80);
+    }
+
     const container = document.createElement("div");
     container.id = "superbia";
     document.body.prepend(container);
-
+    container.style.backgroundColor = `hsl(${hue}, ${sat}%, ${ln * 0.2}%)`;
     const canvas = document.createElement("canvas");
 
     canvas.id = "lux";
-    canvas.width = width
-    canvas.height = height
+    canvas.width = width;
+    canvas.height = height;
 
     container.prepend(canvas);
 
-    return { cv: canvas, ctx: canvas.getContext("2d") };
+    const noise = new Noise();
+    noise.setSeed(seed);
+    const flow = [];
+
+    const el = canvas;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = `hsl(${hue}, ${sat}%, ${ln}%)`;
+    ctx.fillRect(0, 0, el.width, el.height);
+
+    return {
+      canvas,
+      color: {
+        hue,
+        sat,
+        ln,
+      },
+      combDim: el.width + el.height,
+      inc: (el.width + el.height) * 0.001,
+      noise,
+      el,
+      ctx,
+      flow,
+    };
   }
 }
 
