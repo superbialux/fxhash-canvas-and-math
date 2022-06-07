@@ -1,16 +1,27 @@
-class Vector {
-  constructor(x, y, z) {
+import Vec3 from "../Vec3";
+
+class Vec2 {
+  constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.z = z || 0;
+
+    // Vec2 Swizzle, idk if needed
+    this.yy = new Vec2(y, y);
+    this.xx = new Vec2(x, x);
+    this.yx = new Vec2(y, x);
+
+    // Vec3 Swizzle
+    this.xyy = new Vec3(x, y, y);
+    this.yxy = new Vec2(y, x, y);
+    this.yyx = new Vec2(y, y, x);
   }
 
   copy() {
-    return new Vector(this.x, this.y, this.z);
+    return new Vec2(this.x, this.y);
   }
 
   mag() {
-    return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    return Math.sqrt(this.x * this.x + this.y * this.y);
   }
 
   normalize() {
@@ -19,39 +30,35 @@ class Vector {
     return this;
   }
 
-  dot(x, y, z) {
+  dot(x, y) {
     if (x instanceof Vector) {
-      return this.dot(x.x, x.y, x.z);
+      return this.dot(x.x, x.y);
     }
-    return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
+    return this.x * (x || 0) + this.y * (y || 0);
   }
 
   add(v) {
     this.x += v.x || 0;
     this.y += v.y || 0;
-    this.z += v.z || 0;
     return this;
   }
 
-  cross(v) {
-    const x = this.y * v.z - this.z * v.y;
-    const y = this.z * v.x - this.x * v.z;
-    const z = this.x * v.y - this.y * v.x;
-    return new Vector(x, y, z);
-  }
+  // cross(v) {
+  //   const x = this.y * v.z - this.z * v.y;
+  //   const y = this.z * v.x - this.x * v.z;
+  //   return new Vec2(x, y);
+  // }
 
   static add(v1, v2) {
     const newV = v1.copy();
     newV.x += v2.x;
     newV.y += v2.y;
-    newV.z += v2.z;
     return newV;
   }
 
   sub(v) {
     this.x -= v.x || 0;
     this.y -= v.y || 0;
-    this.z -= v.z || 0;
 
     return this;
   }
@@ -61,7 +68,6 @@ class Vector {
 
     newV.x -= v2.x;
     newV.y -= v2.y;
-    newV.z -= v2.z;
     return newV;
   }
 
@@ -69,13 +75,11 @@ class Vector {
     if (x instanceof Vector) {
       this.x *= x.x;
       this.y *= x.y;
-      this.z *= x.z;
       return this;
     }
 
     this.x *= x;
     this.y *= x;
-    this.z *= x;
     return this;
   }
 
@@ -84,25 +88,22 @@ class Vector {
     if (v2 instanceof Vector) {
       newV.x *= v2.x;
       newV.y *= v2.y;
-      newV.z *= v2.z;
       return newV;
     }
 
     newV.x *= v2;
     newV.y *= v2;
-    newV.z *= v2;
     return newV;
   }
 
   div(x) {
     if (x instanceof Vector) {
-      if (x.x === 0 || x.y === 0 || x.z === 0) {
+      if (x.x === 0 || x.y === 0) {
         console.warn("Math/Vectors", "Cannot divide by 0");
         return this;
       }
       this.x /= x.x;
       this.y /= x.y;
-      this.z /= x.z;
       return this;
     }
     if (x === 0) {
@@ -111,20 +112,18 @@ class Vector {
     }
     this.x /= x;
     this.y /= x;
-    this.z /= x;
     return this;
   }
 
   static div(v1, v2) {
     const newV = v1.copy();
     if (v2 instanceof Vector) {
-      if (v2.x === 0 || v2.y === 0 || v2.z === 0) {
+      if (v2.x === 0 || v2.y === 0) {
         console.warn("Math/Vectors", "Cannot divide by 0");
         return this;
       }
       newV.x /= v2.x;
       newV.y /= v2.y;
-      newV.z /= v2.z;
       return newV;
     }
     if (v2 === 0) {
@@ -133,7 +132,6 @@ class Vector {
     }
     newV.x /= v2;
     newV.y /= v2;
-    newV.z /= v2;
     return newV;
   }
 
@@ -141,27 +139,21 @@ class Vector {
     if (x instanceof Vector) {
       this.x **= x.x;
       this.y **= x.y;
-      this.z **= x.z;
       return this;
     }
 
     this.x **= x;
     this.y **= x;
-    this.z **= x;
     return this;
   }
 
   dist(v) {
-    return Math.sqrt(
-      (this.x - v.x) ** 2 + (this.y - v.y) ** 2 + (this.z - v.z) ** 2
-    );
+    return Math.sqrt((this.x - v.x) ** 2 + (this.y - v.y) ** 2);
   }
 
   static dist(v1, v2) {
-    return Math.sqrt(
-      (v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2 + (v1.z - v2.z) ** 2
-    );
+    return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2);
   }
 }
 
-export default Vector;
+export default Vec2;
