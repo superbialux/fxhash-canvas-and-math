@@ -5,15 +5,10 @@ class Vec2 {
     this.x = x;
     this.y = y;
 
-    // Vec2 Swizzle, idk if needed
-    this.yy = new Vec2(y, y);
-    this.xx = new Vec2(x, x);
-    this.yx = new Vec2(y, x);
-
     // Vec3 Swizzle
     this.xyy = new Vec3(x, y, y);
-    this.yxy = new Vec2(y, x, y);
-    this.yyx = new Vec2(y, y, x);
+    this.yxy = new Vec3(y, x, y);
+    this.yyx = new Vec3(y, y, x);
   }
 
   copy() {
@@ -31,7 +26,7 @@ class Vec2 {
   }
 
   dot(x, y) {
-    if (x instanceof Vector) {
+    if (x instanceof Vec2) {
       return this.dot(x.x, x.y);
     }
     return this.x * (x || 0) + this.y * (y || 0);
@@ -72,7 +67,7 @@ class Vec2 {
   }
 
   mult(x) {
-    if (x instanceof Vector) {
+    if (x instanceof Vec2) {
       this.x *= x.x;
       this.y *= x.y;
       return this;
@@ -85,7 +80,7 @@ class Vec2 {
 
   static mult(v1, v2) {
     const newV = v1.copy();
-    if (v2 instanceof Vector) {
+    if (v2 instanceof Vec2) {
       newV.x *= v2.x;
       newV.y *= v2.y;
       return newV;
@@ -97,7 +92,7 @@ class Vec2 {
   }
 
   div(x) {
-    if (x instanceof Vector) {
+    if (x instanceof Vec2) {
       if (x.x === 0 || x.y === 0) {
         console.warn("Math/Vectors", "Cannot divide by 0");
         return this;
@@ -117,7 +112,7 @@ class Vec2 {
 
   static div(v1, v2) {
     const newV = v1.copy();
-    if (v2 instanceof Vector) {
+    if (v2 instanceof Vec2) {
       if (v2.x === 0 || v2.y === 0) {
         console.warn("Math/Vectors", "Cannot divide by 0");
         return this;
@@ -136,7 +131,7 @@ class Vec2 {
   }
 
   pow(x) {
-    if (x instanceof Vector) {
+    if (x instanceof Vec2) {
       this.x **= x.x;
       this.y **= x.y;
       return this;

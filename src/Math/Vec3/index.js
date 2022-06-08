@@ -4,11 +4,11 @@ class Vec3 {
   constructor(x, y, z) {
     this.x = x instanceof Vec2 ? x.x : x;
     this.y = x instanceof Vec2 ? x.y : y;
-    this.z = z;
+    this.z = x instanceof Vec2 ? y : z;
   }
 
   copy() {
-    return new Vector(this.x, this.y, this.z);
+    return new Vec3(this.x, this.y, this.z);
   }
 
   mag() {
@@ -26,6 +26,10 @@ class Vec3 {
       return this.dot(x.x, x.y, x.z);
     }
     return this.x * (x || 0) + this.y * (y || 0) + this.z * (z || 0);
+  }
+
+  static dot(v1, v2) {
+    return v1.dot(v2)
   }
 
   add(x) {
