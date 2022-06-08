@@ -38,7 +38,7 @@ class Num {
 
     // return x * x * (3 - 2 * x);
 
-    const t = Plane.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+    const t = Num.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
   }
 
