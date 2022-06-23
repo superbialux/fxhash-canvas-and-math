@@ -29,7 +29,7 @@ class Vec3 {
   }
 
   static dot(v1, v2) {
-    return v1.dot(v2)
+    return v1.dot(v2);
   }
 
   add(x) {
@@ -185,6 +185,21 @@ class Vec3 {
     return this;
   }
 
+  static pow(v1, v2) {
+    const v = v1.copy();
+    if (v2 instanceof Vec3) {
+      v.x **= v2.x;
+      v.y **= v2.y;
+      v.z **= v2.z;
+      return v;
+    }
+
+    v.x **= v2;
+    v.y **= v2;
+    v.z **= v2;
+    return v;
+  }
+
   dist(v) {
     return Math.sqrt(
       (this.x - v.x) ** 2 + (this.y - v.y) ** 2 + (this.z - v.z) ** 2
@@ -195,6 +210,10 @@ class Vec3 {
     return Math.sqrt(
       (v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2 + (v1.z - v2.z) ** 2
     );
+  }
+
+  limit(max) {
+    return this.normalize().mult(max);
   }
 }
 

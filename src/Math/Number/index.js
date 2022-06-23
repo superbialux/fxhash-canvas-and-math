@@ -1,3 +1,5 @@
+import Vec3 from "../Vec3";
+
 class Num {
   static rand(min, max, round = true) {
     if (round) {
@@ -6,12 +8,16 @@ class Num {
     return fxrand() * (max - min) + min;
   }
 
+  static vRand(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
   static randMapped(min, max) {
     return this.map(fxrand(), 0, 1, min, max);
   }
 
   static normalize(axis, limit) {
-    return axis / limit;
+    return (axis+limit/2) / limit;
   }
 
   static map(n, start1, stop1, start2, stop2) {
@@ -51,10 +57,20 @@ class Num {
   }
 
   static mix(x, y, a) {
-    if (x instanceof Vector && y instanceof Vector) {
-      return Vector.add(Vector.mult(x, 1 - a), Vector.mult(y, a));
+    if (x instanceof Vec3 && y instanceof Vec3) {
+      return Vec3.add(Vec3.mult(x, 1 - a), Vec3.mult(y, a));
     }
     return x * (1 - a) + y * a;
+  }
+
+  static toRGB(h, s, l) {
+    const ss = s / 100;
+    const ll = l / 100;
+    const k = (n) => (n + h / 30) % 12;
+    const a = ss * Math.min(ll, 1 - ll);
+    const f = (n) =>
+      ll - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return new Vec3(f(0), f(8), f(4));
   }
 }
 

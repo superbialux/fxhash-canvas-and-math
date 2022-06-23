@@ -1,4 +1,5 @@
 import Num from "../../Math/Number";
+import Vec3 from "../../Math/Vec3";
 
 class Sky {
   constructor(cv) {
@@ -9,37 +10,28 @@ class Sky {
     this.color = cv.color;
     this.noise = cv.noise;
 
-    this.flow = cv.flow;
-    this.particles = [];
+    this.pts = cv.pts;
   }
 
   render() {
     // Clouds
-    for (let x = 0; x < this.el.width; x += this.inc) {
-      for (let y = 0; y < this.el.height; y += this.inc) {
+    for (let x = -this.el.width / 2; x < this.el.width / 2; x += this.inc) {
+      for (let y = -this.el.height / 2; y < this.el.height / 2; y += this.inc) {
         const noise = this.noise.at(
-          Num.normalize(x, this.el.width) * 15,
-          Num.normalize(y, this.el.height) * 15
+          Num.normalize(x, this.el.width) * 5,
+          Num.normalize(y, this.el.height) * 5
         );
-        const brightness = Num.map(noise, 0, 1, 80, 100);
-        this.particles.push({
-          x,
-          y,
-          color: `hsl(${this.color.hue}, ${this.color.sat}%, ${brightness}%)`,
+
+        const col = this.color.copy();
+        col.mult(0.5);
+        col.mult(noise + 0.5);
+
+        this.pts.push({
+          pos: new Vec3(x, y, 0),
+          col,
         });
       }
     }
-
-    this.flow.push({
-      // Sky box
-      callback: () => {
-        this.ctx.fillStyle = `hsl(${this.color.hue}, ${this.color.sat}%, ${
-          this.color.ln * 0.5
-        }%)`;
-        this.ctx.fillRect(0, 0, this.el.width, this.el.height);
-      },
-      particles: this.particles,
-    });
   }
 }
 

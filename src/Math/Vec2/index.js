@@ -9,6 +9,9 @@ class Vec2 {
     this.xyy = new Vec3(x, y, y);
     this.yxy = new Vec3(y, x, y);
     this.yyx = new Vec3(y, y, x);
+
+    this.xyx = new Vec3(x, y, x);
+
   }
 
   copy() {
@@ -148,6 +151,10 @@ class Vec2 {
 
   static dist(v1, v2) {
     return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2);
+  }
+
+  limit(max) {
+    return this.normalize().mult(max);
   }
 }
 
